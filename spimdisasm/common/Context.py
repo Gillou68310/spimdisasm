@@ -17,11 +17,11 @@ from .GlobalOffsetTable import GlobalOffsetTable
 
 class Context:
     N64DefaultBanned = {
-        0x7FFFFFE0, # osInvalICache
-        0x7FFFFFF0, # osInvalDCache, osWritebackDCache, osWritebackDCacheAll
-        0x7FFFFFFF,
-        0x80000010,
-        0x80000020,
+        SymbolsSegment(0x0, 0x0, 0x7FFFFFE0, 0x0, overlayCategory=None), # osInvalICache
+        SymbolsSegment(0x0, 0x0, 0x7FFFFFF0, 0x0, overlayCategory=None), # osInvalDCache, osWritebackDCache, osWritebackDCacheAll
+        SymbolsSegment(0x0, 0x0, 0x7FFFFFFF, 0x0, overlayCategory=None),
+        SymbolsSegment(0x0, 0x0, 0x80000010, 0x0, overlayCategory=None),
+        SymbolsSegment(0x0, 0x0, 0x80000020, 0x0, overlayCategory=None),
     }
 
     def __init__(self):
@@ -39,7 +39,7 @@ class Context:
         self._defaultVramRanges: bool = True
 
         # Stuff that looks like pointers, but the disassembler shouldn't count it as a pointer
-        self.bannedSymbols: set[int] = set()
+        self.bannedSymbols: set[SymbolsSegment] = set()
 
         self.relocInfosPerSection: dict[FileSectionType, dict[int, ContextRelocInfo]] = {
             FileSectionType.Text: dict(),

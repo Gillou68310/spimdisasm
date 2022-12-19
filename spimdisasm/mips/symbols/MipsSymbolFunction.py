@@ -237,8 +237,11 @@ class SymbolFunction(SymbolText):
 
         # Symbols
         for loOffset, symVram in self.instrAnalyzer.symbolLoInstrOffset.items():
-            if symVram in self.context.bannedSymbols:
-                continue
+            for bannedSymbol in self.context.bannedSymbols:
+                if symVram == bannedSymbol.vramStart:
+                    continue
+                elif symVram >= bannedSymbol.vramStart and symVram < bannedSymbol.vramEnd:
+                    continue
 
             # Check for user-defined symbol patches
             patchedAddress = self.getLoPatch(self.getVramOffset(loOffset))
@@ -496,8 +499,11 @@ class SymbolFunction(SymbolText):
             if not self.pointersRemoved and instructionOffset in self.instrAnalyzer.symbolInstrOffset:
                 address = self.instrAnalyzer.symbolInstrOffset[instructionOffset]
 
-                if address in self.context.bannedSymbols:
-                    return None
+                for bannedSymbol in self.context.bannedSymbols:
+                    if address == bannedSymbol.vramStart:
+                        return None
+                    elif address >= bannedSymbol.vramStart and address < bannedSymbol.vramEnd:
+                        return None
 
                 symbol: common.ContextSymbol|None = None
                 loInstr = instr
